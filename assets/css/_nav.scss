@@ -1,0 +1,36 @@
+.nav { 
+  @include width();
+  display: flex;
+  justify-content: flex-end;
+
+  .nav-items {
+    padding: .5rem 0;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 1.5rem;
+
+    .nav-item {
+      @include btn-ico();
+      background: transparent;
+      padding: 0;
+      border-bottom: 3px solid transparent;
+      border-radius: 0;
+
+      &:hover,
+      &:focus,
+      &.active {
+        border-bottom: 3px solid $acc;
+      }
+
+      &.ico {
+        border-bottom: 3px solid transparent;
+
+        &:hover {
+          filter: none;
+          border-bottom: 3px solid transparent;
+          color: $acc;
+        }
+      }
+    }
+  }
+}

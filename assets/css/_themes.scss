@@ -1,0 +1,83 @@
+$theme-light: (
+	main: (
+		bga: #fff,
+		bgb: $main-8,
+		color: $main-1
+	),
+	nav-item: (
+		color: $main-1
+  ),
+  movie: (
+    bg: $main-9,
+    color: $main-1,
+    border: $main-8
+  ),
+  movie-details: (
+    bg: $main-9,
+    color: $main-1
+  ),
+	cpp: (
+		bg: $main-9,
+    color: $main-1
+	),
+	footer: (
+		bg: rgba(0,0,0,0),
+    color: $main-1
+	)
+);
+
+
+$theme-dark: (
+	main: (
+		bga: $main-0,
+		bgb: $main-1,
+		color: $main-8
+	),
+	nav-item: (
+		color: $main-8
+	),
+  movie: (
+    bg: $main-2,
+    color: $main-8,
+    border: $main-1
+  ),
+  movie-details: (
+    bg: $main-2,
+    color: $main-9
+	),
+	cpp: (
+		bg: $main-2,
+    color: $main-9
+	),
+	footer: (
+		bg: rgba(0,0,0,0),
+    color: $main-9
+	)
+);
+
+
+@mixin themable($theme-name, $theme-map) {
+	.#{$theme-name} {
+		@each $section, $map in $theme-map {
+			.#{$section} {
+				@if ($section == main) {
+					background: map-get($map, bga);
+					background: linear-gradient(15deg, map-get($map, bgb) 0%,  map-get($map, bga) 50%, map-get($map, bgb) 100%);
+					color: map-get($map, color);
+        } @else if ($section == nav-item) {
+          color: map-get($map, color);
+        } @else if ($section == movie) {
+					background: map-get($map, bg);
+          color: map-get($map, color);
+          border: 1px solid map-get($map, border);
+				} @else {
+					background: map-get($map, bg);
+					color: map-get($map, color);
+				}
+			}
+		}
+	}
+}
+
+@include themable(theme-light, $theme-light);
+@include themable(theme-dark, $theme-dark);

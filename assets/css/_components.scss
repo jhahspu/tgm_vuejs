@@ -1,0 +1,102 @@
+.main {
+  height: 100vh;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+
+  section {
+    flex: 1;
+    @include width();
+    padding: 1rem 0 1.5rem;
+    opacity: 0;
+    animation: .5s forwards section;
+
+    .head {
+      height: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        padding-left: .5rem;
+        border-left: 4px solid green;
+        line-height: 1.2rem
+      }
+
+      button {
+        @include btn-ico();
+        background-color: $acc;
+        color: $main-9;
+      }
+    }
+
+    &.privacy {
+      @include width();
+      max-width: 768px;
+
+      h1 {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+
+        a {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: $acc;
+
+          svg {
+            width: 28px;
+            height: 28px;
+            margin-right: .5rem;
+
+            path {
+              fill: currentColor;
+            }
+          }
+        }
+      }
+
+      div {
+        h2, p {
+          margin-bottom: 1rem
+        }
+      }
+
+      #revoke-consent {
+        @include btn();
+        background-color: $danger;
+        color: $main-9;
+        border-radius: .25rem;
+
+        &:hover {
+          filter: brightness(80%);
+        }
+      }
+      
+    }
+  }
+}
+
+.footer {
+  @include width();
+  padding: 2rem 0;
+
+  a {
+    color: currentColor;
+
+    &:hover {
+      color: cornflowerblue;
+    }
+  }
+}
+
+@keyframes section {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

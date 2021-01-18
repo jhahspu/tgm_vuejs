@@ -1,0 +1,47 @@
+.cpp {
+  display: none;
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  width: 70%;
+  max-width: 400px;
+  padding: 1rem;
+  box-shadow: $box-shadow;
+  border: 1px solid $acc;
+  border-radius: .25rem;
+
+  &.show {
+    display: block;
+  }
+
+  p {
+    padding-bottom: 1rem;
+
+    a {
+      color: currentColor;
+
+      &:hover {
+        color: cornflowerblue;
+      }
+    }
+  }
+
+  .btns {
+    text-align: center;
+
+    button {
+      @include btn();
+      color: $main-9;
+      border-radius: .25rem;
+
+      &:hover {
+        filter: brightness(80%);
+      }
+
+      &.accept {
+        margin-right: 1rem;
+        background-color: $acc;
+      }
+    }
+  }
+}

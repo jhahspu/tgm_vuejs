@@ -1,0 +1,94 @@
+@mixin width {
+  width: 95%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+@mixin btn {
+  padding: .5rem .8rem;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  text-transform: uppercase;
+  transition: background-color .2s ease-in-out, filter .2s ease-in-out;
+  cursor: pointer;
+
+  &:focus,
+  &:active {
+    border: none;
+    outline: none;
+  }
+}
+
+@mixin btn-ico {
+  padding: .25rem;
+  display: grid;
+  place-content: center;
+  border: none;
+  border-radius: .25rem;
+  transition: all .2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(80%);
+  }
+
+  &:focus,
+  &:active {
+    // border: none;
+    outline: none;
+  }
+  
+  svg,
+  img {
+    width: 28px;
+    height: 28px;
+    color: currentColor;
+    pointer-events: none;
+
+    @media screen and (min-width: 600px) {
+      width: 32px;
+      height: 32px;
+    }
+    path {
+      fill: currentColor;
+    }
+  }
+}
+
+@mixin btn-ico-text {
+  padding: .5rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: currentColor;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  text-transform: uppercase;
+  transition: background-color .2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+
+  &:focus,
+  &:active {
+    border: none;
+    outline: none;
+  }
+
+  span {
+    margin-right: .5rem;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+      path {
+        fill: currentColor;
+      }
+    }
+  }
+}

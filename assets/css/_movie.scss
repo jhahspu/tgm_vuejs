@@ -1,0 +1,64 @@
+.movies {
+  padding: 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+
+  @media screen and (min-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (min-width: 800px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .movie {
+    border-radius: .25rem;
+    overflow: hidden;
+    box-shadow: $box-shadow;
+    transition: all .15s linear;
+
+    .poster {
+      width: 100%;
+      padding-bottom: 150%;
+      background-size: cover !important;
+      background-repeat: no-repeat !important;
+      opacity: 0;
+      animation: 1s forwards poster;
+    }
+
+    h3 {
+      height: 2.4rem;
+      margin: .75rem 0;
+      padding: 0 0.75rem;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      line-height: 1.2rem;
+      font-size: 1.2rem;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .mvb {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      button {
+        @include btn-ico-text();
+      }
+    }
+  }
+}
+
+@keyframes poster {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

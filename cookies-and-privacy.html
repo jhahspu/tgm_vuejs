@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="title" content="Top Good Movies">
+  <meta name="description" content="Probably the best movie collection on the internet.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.topgoodmovies.com">
+  <meta property="og:title" content="Top Good Movies">
+  <meta property="og:description" content="Probably the best movie collection on the internet.">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.topgoodmovies.com">
+  <meta property="twitter:title" content="Top Good Movies">
+  <meta property="twitter:description" content="Probably the best movie collection on the internet.">
+  <link rel="shortcut icon" href="./assets/img/ico.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/style.min.css">
+  <title>Top Good Movies | Cookies & Privacy Policy</title>
+</head>
+<body>
+  
+  <main class="main">
+
+    <section class="privacy">
+
+    <h1>
+      <span>Cookies & Privacy Policy</span>
+      <a href="/">
+        <svg class="svg-icon" viewBox="0 0 20 20">
+          <path fill="none" d="M18.271,9.212H3.615l4.184-4.184c0.306-0.306,0.306-0.801,0-1.107c-0.306-0.306-0.801-0.306-1.107,0
+          L1.21,9.403C1.194,9.417,1.174,9.421,1.158,9.437c-0.181,0.181-0.242,0.425-0.209,0.66c0.005,0.038,0.012,0.071,0.022,0.109
+          c0.028,0.098,0.075,0.188,0.142,0.271c0.021,0.026,0.021,0.061,0.045,0.085c0.015,0.016,0.034,0.02,0.05,0.033l5.484,5.483
+          c0.306,0.307,0.801,0.307,1.107,0c0.306-0.305,0.306-0.801,0-1.105l-4.184-4.185h14.656c0.436,0,0.788-0.353,0.788-0.788
+          S18.707,9.212,18.271,9.212z"></path>
+        </svg>
+        Home
+      </a>
+    </h1>
+      <div>
+        <h2>How we collect informations about our users</h2>
+        <p>
+          The only private information collected about users is the unique username they choose to register on this website, if they choose to register.
+        </p>
+        <p>
+          We do not collect private informations like email, location or any other type of information that can be used to trace our users.
+        </p>
+      </div>
+
+      <div>
+
+        <h2>What are cookies?</h2>
+        <p>
+          A cookie is a small piece of text that allows a website to recognize the users' device and maintain a consistent, cohesive experience throughout multiple sessions. To check your cookie settings go into your browser's settings and look for the cookies section.
+        </p>
+
+        <h2>Cookies & LocalStorage used by topgoodmovies.com</h2>
+        <p>
+          Visitors' consent.
+        </p>
+        <p>
+          Registered users' information.
+        </p>
+        <p>
+          Temporary data about movies.
+        </p>
+
+        <h2>Remove cookies and data: 
+          <button id="revoke-consent">Remove</button>
+        </h2>
+
+        <h2>Third party cookies, Youtube and Google</h2>
+        <p>
+          In order to watch Youtube trailers on this site, Google may set tracking cookies in the users' browser. Anyone can check Google's privacy policy
+          <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">here</a>.
+        </p>
+      </div>
+
+    </section>
+  </main>
+
+<script>
+let revBtn = document.querySelector('#revoke-consent');
+revBtn.addEventListener('click', () => {
+  localStorage.clear();
+  RemoveSiteCookies();
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      registration.unregister()
+    } 
+  });
+  alert("All website data removed");
+});
+
+const RemoveSiteCookies = () => {
+  let cookies = document.cookie.split("; ");
+  for (let c = 0; c < cookies.length; c++) {
+    let d = window.location.hostname.split(".");
+    while (d.length > 0) {
+      let cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+      let p = location.pathname.split('/');
+      document.cookie = cookieBase + '/';
+      while (p.length > 0) {
+          document.cookie = cookieBase + p.join('/');
+          p.pop();
+      };
+      d.shift();
+    }
+  }
+};
+</script>
+</body>
+</html>
