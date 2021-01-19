@@ -304,16 +304,16 @@ app.component('tab-account', {
     <form
       v-if="noJWT"
       @submit.prevent="usrForm"
-      method="post">
+      class="usr-form">
 
-      <div v-if="errors.length">
+      <div v-if="errors.length" class="errors">
         <b>Correct the following errors: </b>
         <ul>
           <li v-for="error in errors">{{error}}</li>
         </ul>
       </div>
 
-      <div>
+      <div class="form-group">
         <input
           v-model="userAction"
           type="radio"
@@ -331,7 +331,7 @@ app.component('tab-account', {
         <label for="register">Register</label>
       </div>
 
-      <div>
+      <div class="form-group">
         <label for="username">Username: </label>
         <input
           v-model="username"
@@ -341,7 +341,7 @@ app.component('tab-account', {
           placeholder="username" />
       </div>
 
-      <div>
+      <div class="form-group">
         <label for="password">Password: </label>
         <input
           v-model="password"
@@ -351,7 +351,7 @@ app.component('tab-account', {
           placeholder="password" />
       </div>
 
-      <div v-if="userAction == 'register'">
+      <div v-if="userAction == 'register'" class="form-group">
         <label for="passwordc">Retype Password: </label>
         <input
           v-model="passwordc"
@@ -361,9 +361,13 @@ app.component('tab-account', {
           placeholder="retype password" />
       </div>
 
-      <input
-        type="submit"
-        :value="userAction" />
+      <div>
+        <input
+          :value="userAction"
+          type="submit"
+          class="form-btn" />
+      </div>
+      
     </form>
 
     </section>
@@ -382,42 +386,26 @@ app.component('tab-account', {
     }
   },
   methods: {
-    checkForm: function() {
-      if (this.userAction === 'signin' && this.username && this.password) {
-        return true;
-      } else if (this.userAction === 'register' && this.username && this.password && this.password === this.passwordc) {
-        return true;
-      }
-
+    usrForm: function() {
       this.errors = [];
-      if (this.username === null || this.username === '') {
-        this.errors.push('Username required');
-      }
-      if (this.username.length < 4) {
-        this.errors.push('Username must be at least 4 characters long');
-      }
-      if (this.password === null || this.password === '') {
-        this.errors.push('Password required');
-      }
+      if (this.username === null || this.username === '' || this.username.length < 4) {
+        this.errors.push('Username required, minimum 4 characters');
+      } 
+      if(this.password === null || this.password === '' || this.password.length < 4) {
+        this.errors.push('Password required, minimum 4 characters');
+      } 
       if (this.userAction === 'register' && this.password !== this.passwordc) {
         this.errors.push('Passwords must match');
       }
-    },
-    usrForm: function() {
-      this.checkedForm = this.checkForm();
-      if (this.checkedForm) {
+
+      if (this.errors.length === 0) {
         this.noJWT = false;
         this.signedInUser = this.username;
         localStorage.setItem('username', JSON.stringify(this.username));
-
-        console.log(this.username);
-        console.log(this.password);
-        console.log(this.userAction);
       } else {
-        this.checkedForm = false;
+        this.noJWT = true;
         this.password = null;
         this.passwordc = null;
-        alert("try again..");
       }
     },
     signOut: function() {
