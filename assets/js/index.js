@@ -366,13 +366,6 @@ app.component('tab-account', {
         :value="userAction" />
     </form>
 
-    <div>
-      User req: {{userAction}} <br>
-      Username: {{username}} <br>
-      Password: {{password}} <br>
-      Password: {{passwordc}} <br>
-    </div>
-
     </section>
   `,
   data: function() {
