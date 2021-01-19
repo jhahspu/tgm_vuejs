@@ -118,7 +118,9 @@ app.component('tab-random', {
 
           <div v-for="tt in selectedMovie.trailers.split(' ')">
             <div v-if="tt.length > 3" class="iframe-container">
-              <iframe loading="lazy" :src="'https://www.youtube-nocookie.com/embed/' + tt"></iframe>
+              <iframe
+                loading="lazy"
+                :src="'https://www.youtube-nocookie.com/embed/' + tt"></iframe>
             </div>
           </div>
 
@@ -381,8 +383,6 @@ app.component('tab-account', {
       noJWT: localStorage.getItem('username') ? false: true,
       signedInUser: localStorage.getItem('username') ? JSON.parse(localStorage.getItem('username')) : null,
       errors: [],
-      checkedForm: false,
-      
     }
   },
   methods: {
@@ -402,6 +402,7 @@ app.component('tab-account', {
         this.noJWT = false;
         this.signedInUser = this.username;
         localStorage.setItem('username', JSON.stringify(this.username));
+        // set jwt
       } else {
         this.noJWT = true;
         this.password = null;
@@ -411,9 +412,10 @@ app.component('tab-account', {
     signOut: function() {
       this.noJWT = true;
       localStorage.removeItem('username');
+      // and remove jwt
     }
   }
 })
 
 
-app.mount('#app')
+app.mount('#app');
