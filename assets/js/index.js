@@ -19,7 +19,7 @@ const app = Vue.createApp({
         },
 
       ],
-      currentTab: 'Random',
+      currentTab: 'Account',
       darkMode: localStorage.getItem('darkMode') ? JSON.parse(localStorage.getItem('darkMode')) : false,
       cookies: localStorage.getItem('cookies') ? false : true,
     }
@@ -90,7 +90,8 @@ app.component('tab-random', {
 
       <div
         class="overlay"
-        :class="{'active': selectedMovie}">
+        :class="{'active': selectedMovie}"
+        @click.self="selectedMovie = null">
 
         <div
           class="movie-details"
@@ -152,7 +153,6 @@ app.component('tab-random', {
           if (res["status"] < 400) {
             this.movies = res['data'];
             localStorage.setItem('mvs', JSON.stringify(res['data']));
-            // console.log(res);
           } else {
             console.log("something went wrong");
           }
@@ -211,7 +211,8 @@ app.component('tab-latest', {
 
       <div
         class="overlay"
-        :class="{'active': selectedMovie}">
+        :class="{'active': selectedMovie}"
+        @click.self="selectedMovie = null">
 
         <div
           class="movie-details"
@@ -273,7 +274,6 @@ app.component('tab-latest', {
           if (res["status"] < 400) {
             this.movies = res['data'];
             localStorage.setItem('ltst', JSON.stringify(res['data']));
-            // console.log(res);
           } else {
             console.log("something went wrong");
           }
@@ -288,11 +288,150 @@ app.component('tab-account', {
     <section class="tab-account">
 
     <div class="head">
-      <h2>Account - coming soon</h2>
+      <h2>
+        <span v-if="noJWT">Account</span>
+        <span v-else>Hello <span class="user-name">{{signedInUser}}</span></span>
+      </h2>
+      <button
+        v-if="!noJWT"
+        @click="signOut">
+          <svg class="svg-icon" viewBox="0 0 20 20" style="transform: rotate(90deg)">
+            <path d="M8.416,3.943l1.12-1.12v9.031c0,0.257,0.208,0.464,0.464,0.464c0.256,0,0.464-0.207,0.464-0.464V2.823l1.12,1.12c0.182,0.182,0.476,0.182,0.656,0c0.182-0.181,0.182-0.475,0-0.656l-1.744-1.745c-0.018-0.081-0.048-0.16-0.112-0.224C10.279,1.214,10.137,1.177,10,1.194c-0.137-0.017-0.279,0.02-0.384,0.125C9.551,1.384,9.518,1.465,9.499,1.548L7.76,3.288c-0.182,0.181-0.182,0.475,0,0.656C7.941,4.125,8.234,4.125,8.416,3.943z M15.569,6.286h-2.32v0.928h2.32c0.512,0,0.928,0.416,0.928,0.928v8.817c0,0.513-0.416,0.929-0.928,0.929H4.432c-0.513,0-0.928-0.416-0.928-0.929V8.142c0-0.513,0.416-0.928,0.928-0.928h2.32V6.286h-2.32c-1.025,0-1.856,0.831-1.856,1.856v8.817c0,1.025,0.832,1.856,1.856,1.856h11.138c1.024,0,1.855-0.831,1.855-1.856V8.142C17.425,7.117,16.594,6.286,15.569,6.286z"></path>
+          </svg>
+      </button>
+    </div>
+
+    <form
+      v-if="noJWT"
+      @submit.prevent="usrForm"
+      method="post">
+
+      <div v-if="errors.length">
+        <b>Correct the following errors: </b>
+        <ul>
+          <li v-for="error in errors">{{error}}</li>
+        </ul>
+      </div>
+
+      <div>
+        <input
+          v-model="userAction"
+          type="radio"
+          id="signin"
+          name="signin"
+          value="signin" />
+        <label for="signin">Sign In</label>
+        
+        <input
+          v-model="userAction"
+          type="radio"
+          id="register"
+          name="register"
+          value="register" />
+        <label for="register">Register</label>
+      </div>
+
+      <div>
+        <label for="username">Username: </label>
+        <input
+          v-model="username"
+          id="username"
+          name="username"
+          type="text"
+          placeholder="username" />
+      </div>
+
+      <div>
+        <label for="password">Password: </label>
+        <input
+          v-model="password"
+          id="password"
+          name="password"
+          type="password"
+          placeholder="password" />
+      </div>
+
+      <div v-if="userAction == 'register'">
+        <label for="passwordc">Retype Password: </label>
+        <input
+          v-model="passwordc"
+          id="passwordc"
+          name="passwordc"
+          type="password"
+          placeholder="retype password" />
+      </div>
+
+      <input
+        type="submit"
+        :value="userAction" />
+    </form>
+
+    <div>
+      User req: {{userAction}} <br>
+      Username: {{username}} <br>
+      Password: {{password}} <br>
+      Password: {{passwordc}} <br>
     </div>
 
     </section>
-  `
+  `,
+  data: function() {
+    return {
+      username: null,
+      password: null,
+      passwordc: null,
+      userAction: "signin",
+      noJWT: localStorage.getItem('username') ? false: true,
+      signedInUser: localStorage.getItem('username') ? JSON.parse(localStorage.getItem('username')) : null,
+      errors: [],
+      checkedForm: false,
+      
+    }
+  },
+  methods: {
+    checkForm: function() {
+      if (this.userAction === 'signin' && this.username && this.password) {
+        return true;
+      } else if (this.userAction === 'register' && this.username && this.password && this.password === this.passwordc) {
+        return true;
+      }
+
+      this.errors = [];
+      if (this.username === null || this.username === '') {
+        this.errors.push('Username required');
+      }
+      if (this.username.length < 4) {
+        this.errors.push('Username must be at least 4 characters long');
+      }
+      if (this.password === null || this.password === '') {
+        this.errors.push('Password required');
+      }
+      if (this.userAction === 'register' && this.password !== this.passwordc) {
+        this.errors.push('Passwords must match');
+      }
+    },
+    usrForm: function() {
+      this.checkedForm = this.checkForm();
+      if (this.checkedForm) {
+        this.noJWT = false;
+        this.signedInUser = this.username;
+        localStorage.setItem('username', JSON.stringify(this.username));
+
+        console.log(this.username);
+        console.log(this.password);
+        console.log(this.userAction);
+      } else {
+        this.checkedForm = false;
+        this.password = null;
+        this.passwordc = null;
+        alert("try again..");
+      }
+    },
+    signOut: function() {
+      this.noJWT = true;
+      localStorage.removeItem('username');
+    }
+  }
 })
 
 

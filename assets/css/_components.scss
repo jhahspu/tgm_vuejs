@@ -20,7 +20,11 @@
       h2 {
         padding-left: .5rem;
         border-left: 4px solid green;
-        line-height: 1.2rem
+        line-height: 1.2rem;
+
+        .user-name {
+          color: $acc;
+        }
       }
 
       button {
