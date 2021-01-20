@@ -151,6 +151,14 @@
           text-align: right;
         }
 
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active  {
+            -webkit-box-shadow: 0 0 0 30px $main-6 inset !important;
+            color: $main-1;
+        }
+
         input[type=text],
         input[type=password] {
           flex: 2;
@@ -161,9 +169,14 @@
           border-bottom: $border;
           background-color: transparent;
           color: currentColor;
-          
-          &:focus {
+
+          &:valid {
+            color: currentColor;
+            background-color: transparent;
             border-bottom: 1px solid $acc;
+          }
+          &:invalid {
+            border-bottom: 1px solid $danger;
           }
         }
       }

@@ -26,18 +26,21 @@ const app = Vue.createApp({
   },
   computed: {
     currentTabComponent() {
-      return 'tab-' + this.currentTab.toLowerCase()
+      return 'tab-' + this.currentTab.toLowerCase();
     }
   },
   methods: {
     tgglDarkMode() {
-      this.darkMode = !this.darkMode
-      localStorage.setItem('darkMode', JSON.stringify(this.darkMode))
+      this.darkMode = !this.darkMode;
+      localStorage.setItem('darkMode', JSON.stringify(this.darkMode));
     },
     usrCookies(usrOpt) {
-      localStorage.setItem('cookies', JSON.stringify(usrOpt))
-      this.cookies = !this.cookies
+      localStorage.setItem('cookies', JSON.stringify(usrOpt));
+      this.cookies = !this.cookies;
     }
+  },
+  mounted: function() {
+    document.body.classList.remove('loading');
   }
 })
   
@@ -141,13 +144,13 @@ app.component('tab-random', {
       const raw = JSON.stringify({
         "req":"rnd-titles",
         "genre":"any"
-      })
+      });
       const requestOptions = {
         method: 'POST',
         headers: head,
         body: raw,
         redirect: 'follow'
-      }
+      };
       
       const res = await fetch("resources/movies", requestOptions)
         .then(resp => resp.json())
@@ -336,6 +339,9 @@ app.component('tab-account', {
       <div class="form-group">
         <label for="username">Username: </label>
         <input
+          required
+          minlength="6"
+          maxlength="20"
           v-model="username"
           id="username"
           name="username"
@@ -346,6 +352,9 @@ app.component('tab-account', {
       <div class="form-group">
         <label for="password">Password: </label>
         <input
+          required
+          minlength="6"
+          maxlength="20"
           v-model="password"
           id="password"
           name="password"
@@ -354,8 +363,9 @@ app.component('tab-account', {
       </div>
 
       <div v-if="userAction == 'register'" class="form-group">
-        <label for="passwordc">Retype Password: </label>
+        <label for="passwordc">Check Password: </label>
         <input
+          required
           v-model="passwordc"
           id="passwordc"
           name="passwordc"
@@ -388,21 +398,21 @@ app.component('tab-account', {
   methods: {
     usrForm: function() {
       this.errors = [];
-      if (this.username === null || this.username === '' || this.username.length < 4) {
-        this.errors.push('Username required, minimum 4 characters');
+      if (this.username === null || this.username === '' || this.username.length < 6 || this.username.includes(' ')) {
+        this.errors.push('Username required, minimum 6 characters and no empty spaces');
       } 
-      if(this.password === null || this.password === '' || this.password.length < 4) {
-        this.errors.push('Password required, minimum 4 characters');
+      if(this.password === null || this.password === '' || this.password.length < 6 || this.password.includes(' ')) {
+        this.errors.push('Password required, minimum 6 characters and no empty spaces');
       } 
       if (this.userAction === 'register' && this.password !== this.passwordc) {
         this.errors.push('Passwords must match');
       }
 
       if (this.errors.length === 0) {
-        this.noJWT = false;
-        this.signedInUser = this.username;
-        localStorage.setItem('username', JSON.stringify(this.username));
-        // set jwt
+        // this.noJWT = false;
+        // this.signedInUser = this.username;
+        // localStorage.setItem('username', JSON.stringify(this.username));
+        
       } else {
         this.noJWT = true;
         this.password = null;

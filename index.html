@@ -21,7 +21,7 @@
   <script src="assets/js/vue.global.prod.js"></script>
   <title>Top Good Movies</title>
 </head>
-<body id="app">
+<body id="app" class="loading">
 
 <div :class="[{'theme-dark': darkMode}, {'theme-light': !darkMode}]">
 
@@ -74,7 +74,7 @@
   </main>
 
 </div>
-
+<div id="loader"></div>
 <noscript>In order to see the content you need to activate JavaScript</noscript>
 <script src="assets/js/index.js"></script>
 </body>
