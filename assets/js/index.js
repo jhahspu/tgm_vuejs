@@ -409,20 +409,48 @@ app.component('tab-account', {
       }
 
       if (this.errors.length === 0) {
-        // this.noJWT = false;
-        // this.signedInUser = this.username;
-        // localStorage.setItem('username', JSON.stringify(this.username));
-        
+        this.handleUserReq();
+        this.username = null;
+        this.password = null;
+        this.passwordc = null;
       } else {
         this.noJWT = true;
         this.password = null;
         this.passwordc = null;
       }
     },
+    handleUserReq: async function() {
+      const head = new Headers();
+      head.append("Content-Type", "application/json");
+      const raw = JSON.stringify({
+        "req": this.userAction,
+        "username": this.username,
+        "password": this.password
+      })
+      const requestOptions = {
+        method: 'POST',
+        headers: head,
+        body: raw,
+        redirect: 'follow'
+      }
+      const res = await fetch("resources/users", requestOptions)
+        .then(resp => resp.json())
+        .then(res => {
+          if (res["status"] < 400) {
+            this.signedInUser = res["data"]["username"];
+            localStorage.setItem('username', JSON.stringify(res["data"]["username"]));
+            localStorage.setItem('jwt', JSON.stringify(res["data"]["jwt"]));
+            this.noJWT = false;
+          } else {
+            console.log(res);
+          }
+        })
+        .catch(error => console.log(error));
+    },
     signOut: function() {
       this.noJWT = true;
       localStorage.removeItem('username');
-      // and remove jwt
+      localStorage.removeItem('jwt');
     }
   }
 })

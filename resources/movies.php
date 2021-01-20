@@ -24,5 +24,4 @@ if ($data->req === "rnd-titles") {
   echo $result;
 } else {
   echo json_response(405, "Invalid request");
-  header("Location: /");
 }
