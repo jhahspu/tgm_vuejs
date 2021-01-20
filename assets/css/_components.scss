@@ -181,6 +181,18 @@
         }
       }
     }
+
+    .toast {
+      position: fixed;
+      top: 2%;
+      left: 2%;
+      padding: .5rem 1rem;
+      background-color: $info;
+      color: $main-9;
+      border-radius: .25rem;
+      box-shadow: $box-shadow;
+      z-index: 999;
+    }
   }
 }
 

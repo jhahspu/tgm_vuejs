@@ -48,6 +48,8 @@ app.component('tab-random', {
   template: `
     <section class="tab-random">
 
+      <div class="toast" v-show="message">{{message}}</div>
+
       <div class="head">
         <h2>Random Titles</h2>
         <button @click="updateMovies">
@@ -134,7 +136,8 @@ app.component('tab-random', {
   data: function () {
     return {
       movies: localStorage.getItem('mvs') ? JSON.parse(localStorage.getItem('mvs')) : null,
-      selectedMovie: null
+      selectedMovie: null,
+      message: null
     }
   },
   methods: {
@@ -158,8 +161,15 @@ app.component('tab-random', {
           if (res["status"] < 400) {
             this.movies = res['data'];
             localStorage.setItem('mvs', JSON.stringify(res['data']));
+            this.message = res['message'];
+            setTimeout(() => {
+              this.message = null;
+            }, 5000);
           } else {
-            console.log("something went wrong");
+            this.message = res['message'];
+            setTimeout(() => {
+              this.message = null;
+            }, 5000);
           }
         })
         .catch(error => console.log(error));
@@ -170,6 +180,8 @@ app.component('tab-random', {
 app.component('tab-latest', {
   template: `
     <section class="tab-movies">
+
+      <div class="toast" v-show="message">{{message}}</div>
 
       <div class="head">
         <h2>Latest Titles</h2>
@@ -256,7 +268,8 @@ app.component('tab-latest', {
   data: function () {
     return {
       movies: localStorage.getItem('ltst') ? JSON.parse(localStorage.getItem('ltst')) : null,
-      selectedMovie: null
+      selectedMovie: null,
+      message: null
     }
   },
   methods: {
@@ -279,6 +292,10 @@ app.component('tab-latest', {
           if (res["status"] < 400) {
             this.movies = res['data'];
             localStorage.setItem('ltst', JSON.stringify(res['data']));
+            this.message = res['message'];
+            setTimeout(() => {
+              this.message = null;
+            }, 5000);
           } else {
             console.log("something went wrong");
           }
@@ -291,6 +308,8 @@ app.component('tab-latest', {
 app.component('tab-account', {
   template: `
     <section class="tab-account">
+
+    <div class="toast" v-show="message">{{message}}</div>
 
     <div class="head">
       <h2>
@@ -393,12 +412,13 @@ app.component('tab-account', {
       noJWT: localStorage.getItem('username') ? false: true,
       signedInUser: localStorage.getItem('username') ? JSON.parse(localStorage.getItem('username')) : null,
       errors: [],
+      message: null,
     }
   },
   methods: {
     usrForm: function() {
       this.errors = [];
-      if (this.username === null || this.username === '' || this.username.length < 6 || this.username.includes(' ')) {
+      if (this.username === null || this.username === '' || this.username.length < 6 || this.username.includes(' ') || this.username.includes('admin')) {
         this.errors.push('Username required, minimum 6 characters and no empty spaces');
       } 
       if(this.password === null || this.password === '' || this.password.length < 6 || this.password.includes(' ')) {
@@ -437,12 +457,20 @@ app.component('tab-account', {
         .then(resp => resp.json())
         .then(res => {
           if (res["status"] < 400) {
+            // console.log(res);
             this.signedInUser = res["data"]["username"];
             localStorage.setItem('username', JSON.stringify(res["data"]["username"]));
             localStorage.setItem('jwt', JSON.stringify(res["data"]["jwt"]));
             this.noJWT = false;
+            this.message = res['message'];
+            setTimeout(() => {
+              this.message = null;
+            }, 5000);
           } else {
-            console.log(res);
+            this.message = res['message'];
+            setTimeout(() => {
+              this.message = null;
+            }, 5000);
           }
         })
         .catch(error => console.log(error));
