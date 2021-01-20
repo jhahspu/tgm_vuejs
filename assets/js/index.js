@@ -19,7 +19,7 @@ const app = Vue.createApp({
         },
 
       ],
-      currentTab: 'Account',
+      currentTab: 'Random',
       darkMode: localStorage.getItem('darkMode') ? JSON.parse(localStorage.getItem('darkMode')) : false,
       cookies: localStorage.getItem('cookies') ? false : true,
     }

@@ -191,6 +191,8 @@
       color: $main-9;
       border-radius: .25rem;
       box-shadow: $box-shadow;
+      opacity: 0;
+      animation: 5s forwards toast;
       z-index: 999;
     }
   }
@@ -215,5 +217,20 @@
   }
   100% {
     opacity: 1;
+  }
+}
+
+@keyframes toast {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
