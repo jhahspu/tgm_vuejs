@@ -34,8 +34,12 @@ if ($data->req === "rnd-titles") {
       echo json_response(400, "Movie already in our database, good choice though .)");
     } else {
       $res = getDataFromTmdb($data->tmdbid, BASE_PATH, $data->username);
-      $addedMovie = $mvs->insertMovie($res);
-      echo $addedMovie;
+      if ($res) {
+        $addedMovie = $mvs->insertMovie($res);
+        echo $addedMovie;
+      } else {
+        echo json_response(400, "Rating must be over 6");
+      }
     }
   } else {
     echo json_response(400, "Please signin again, thank you!" . $data->jwt);
