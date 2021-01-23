@@ -142,6 +142,7 @@ app.component('tab-random', {
   },
   methods: {
     updateMovies: async function() {
+      document.querySelector('#loader').classList.add('loading');
       const head = new Headers();
       head.append("Content-Type", "application/json");
       const raw = JSON.stringify({
@@ -167,6 +168,7 @@ app.component('tab-random', {
           }
         })
         .catch(error => console.log(error));
+      document.querySelector('#loader').classList.remove('loading');
     },
     makeToast: function(message) {
       this.message = message;
@@ -274,6 +276,7 @@ app.component('tab-latest', {
   },
   methods: {
     updateMovies: async function() {
+      document.querySelector('#loader').classList.add('loading');
       const head = new Headers();
       head.append("Content-Type", "application/json");
       const raw = JSON.stringify({
@@ -298,6 +301,7 @@ app.component('tab-latest', {
           }
         })
         .catch(error => console.log(error));
+      document.querySelector('#loader').classList.remove('loading');
     },
     makeToast: function(message) {
       this.message = message;
@@ -489,6 +493,7 @@ app.component('tab-account', {
       }
     },
     handleUserReq: async function() {
+      document.querySelector('#loader').classList.add('loading');
       const head = new Headers();
       head.append("Content-Type", "application/json");
       const raw = JSON.stringify({
@@ -520,6 +525,7 @@ app.component('tab-account', {
           }
         })
         .catch(error => console.log(error));
+      document.querySelector('#loader').classList.remove('loading');
     },
     parseJWT: function(token) {
       let base64Url = token.split('.')[1];
@@ -544,6 +550,7 @@ app.component('tab-account', {
     },
     mvsForm: async function() {
       if (localStorage.getItem('jwt')) {
+        document.querySelector('#loader').classList.add('loading');
         const jwt = JSON.parse(localStorage.getItem('jwt'));
         let tJWT = this.parseJWT(jwt);
         let username = tJWT.name;
@@ -573,6 +580,7 @@ app.component('tab-account', {
             }
           })
           .catch(error => console.log(error));
+        document.querySelector('#loader').classList.remove('loading');
       } else {
         this.makeToast('imposible request');
       }
