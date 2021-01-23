@@ -80,6 +80,7 @@
       }
     }
 
+    .mvs-form,
     .usr-form {
       width: 100%;
       max-width: 500px;
@@ -194,19 +195,6 @@
       opacity: 0;
       animation: 5s forwards toast;
       z-index: 999;
-    }
-  }
-}
-
-.footer {
-  @include width();
-  padding: 2rem 0;
-
-  a {
-    color: currentColor;
-
-    &:hover {
-      color: cornflowerblue;
     }
   }
 }

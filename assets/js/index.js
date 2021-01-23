@@ -161,18 +161,18 @@ app.component('tab-random', {
           if (res["status"] < 400) {
             this.movies = res['data'];
             localStorage.setItem('mvs', JSON.stringify(res['data']));
-            this.message = res['message'];
-            setTimeout(() => {
-              this.message = null;
-            }, 5000);
+            this.makeToast(res['message']);
           } else {
-            this.message = res['message'];
-            setTimeout(() => {
-              this.message = null;
-            }, 5000);
+            this.makeToast(res['message']);
           }
         })
         .catch(error => console.log(error));
+    },
+    makeToast: function(message) {
+      this.message = message;
+      setTimeout(() => {
+        this.message = null;
+      }, 5000);
     }
   }
 })
@@ -292,15 +292,18 @@ app.component('tab-latest', {
           if (res["status"] < 400) {
             this.movies = res['data'];
             localStorage.setItem('ltst', JSON.stringify(res['data']));
-            this.message = res['message'];
-            setTimeout(() => {
-              this.message = null;
-            }, 5000);
+            this.makeToast(res['message']);
           } else {
-            console.log("something went wrong");
+            this.makeToast('something went wrong, try again later');
           }
         })
         .catch(error => console.log(error));
+    },
+    makeToast: function(message) {
+      this.message = message;
+      setTimeout(() => {
+        this.message = null;
+      }, 5000);
     }
   }
 })
@@ -401,6 +404,50 @@ app.component('tab-account', {
       
     </form>
 
+    <form 
+      v-if="!noJWT"
+      @submit.prevent="mvsForm"
+      class="mvs-form">
+
+      <div class="form-group">
+        
+        <input
+          required
+          maxlength="7"
+          v-model="tmdbid"
+          id="tmdbid"
+          name="tmdbid"
+          type="text"
+          placeholder="tMDb ID" />
+      </div>
+
+      <div>
+        <input
+          value="+ Title"
+          type="submit"
+          class="form-btn" />
+      </div>
+    
+    </form>
+
+    <div v-if="newMovie.title" class="new-movie">
+      <h2>New Movie in the list: </h2>
+
+      <ul>
+        <li>tMDb: {{newMovie.tmdb_id}}</li>
+        <li>Title: {{newMovie.title}}</li>
+        <li>Tagline: {{newMovie.tagline}}</li>
+        <li>Release Date: {{newMovie.release_date}}</li>
+        <li>Runtime: {{newMovie.runtime}}</li>
+        <li>Genres: {{newMovie.genres}}</li>
+        <li>Overview: {{newMovie.overview}}</li>
+        <li>Poster: {{newMovie.poster}}</li>
+        <li>Trailers: {{newMovie.trailers}}</li>
+        <li>User: {{newMovie.user}}</li>
+      </ul>
+
+    </div>
+
     </section>
   `,
   data: function() {
@@ -413,6 +460,8 @@ app.component('tab-account', {
       signedInUser: localStorage.getItem('username') ? JSON.parse(localStorage.getItem('username')) : null,
       errors: [],
       message: null,
+      tmdbid: null,
+      newMovie: []
     }
   },
   methods: {
@@ -457,28 +506,76 @@ app.component('tab-account', {
         .then(resp => resp.json())
         .then(res => {
           if (res["status"] < 400) {
-            // console.log(res);
             this.signedInUser = res["data"]["username"];
             localStorage.setItem('username', JSON.stringify(res["data"]["username"]));
             localStorage.setItem('jwt', JSON.stringify(res["data"]["jwt"]));
+            let tJWT = this.parseJWT(res["data"]["jwt"]);
+            let exp = new Date(tJWT.exp * 1000);
+            console.log("token will expire @ ", exp);
+            localStorage.setItem('tJWT', JSON.stringify(tJWT));
             this.noJWT = false;
-            this.message = res['message'];
-            setTimeout(() => {
-              this.message = null;
-            }, 5000);
+            this.makeToast(res['message']);
           } else {
-            this.message = res['message'];
-            setTimeout(() => {
-              this.message = null;
-            }, 5000);
+            this.makeToast(res['message']);
           }
         })
         .catch(error => console.log(error));
+    },
+    parseJWT: function(token) {
+      let base64Url = token.split('.')[1];
+      let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    },
+    makeToast: function(message) {
+      this.message = message;
+      setTimeout(() => {
+        this.message = null;
+      }, 5000);
     },
     signOut: function() {
       this.noJWT = true;
       localStorage.removeItem('username');
       localStorage.removeItem('jwt');
+      localStorage.removeItem('tJWT');
+      this.makeToast('Sign Out Successful')
+    },
+    mvsForm: async function() {
+      if (localStorage.getItem('jwt')) {
+        const jwt = JSON.parse(localStorage.getItem('jwt'));
+        let tJWT = this.parseJWT(jwt);
+        let username = tJWT.name;
+        const head = new Headers();
+        head.append("Content-Type", "application/json");
+        const raw = JSON.stringify({
+          "req": 'get-movie',
+          "tmdbid": this.tmdbid,
+          "jwt": jwt,
+          "username": username
+        })
+        const requestOptions = {
+          method: 'POST',
+          headers: head,
+          body: raw,
+          redirect: 'follow'
+        }
+        const res = await fetch("resources/movies", requestOptions)
+          .then(resp => resp.json())
+          .then(res => {
+            if (res["status"] < 400) {
+              this.makeToast(res['message']);
+              this.newMovie = res['data'];
+              this.tmdbid = null;
+            } else {
+              this.makeToast(res['message']);
+            }
+          })
+          .catch(error => console.log(error));
+      } else {
+        this.makeToast('imposible request');
+      }
     }
   }
 })
