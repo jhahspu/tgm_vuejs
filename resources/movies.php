@@ -42,7 +42,7 @@ if ($data->req === "rnd-titles") {
       }
     }
   } else {
-    echo json_response(400, "Please signin again, thank you!" . $data->jwt);
+    echo json_response(400, "Please signin again, thank you!" );
   }
 } else {
   echo json_response(405, "Invalid request");
